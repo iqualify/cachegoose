@@ -43,6 +43,11 @@ module.exports = function(mongoose, cache) {
         exec
           .call(this)
           .then((results) => {
+            if (process.env.DISABLE_DB_MEMCACHE === 'true') {
+              callback(null, results);
+              return resolve(results);
+            }
+
             cache.set(key, results, ttl, () => {
               callback(null, results);
               return resolve(results);
