@@ -4,6 +4,7 @@ const generateKey = require('./generate-key');
 
 module.exports = function(mongoose, cache) {
   const exec = mongoose.Query.prototype.exec;
+  const TWENTY_MINUTES_IN_SECONDS = 60 * 20;
 
   mongoose.Query.prototype.exec = function(op, callback = function() { }) {
     if (!this.hasOwnProperty('_ttl')) return exec.apply(this, arguments);
@@ -61,10 +62,10 @@ module.exports = function(mongoose, cache) {
     });
   };
 
-  mongoose.Query.prototype.cache = function(ttl = 60, customKey = '') {
+  mongoose.Query.prototype.cache = function(ttl = TWENTY_MINUTES_IN_SECONDS, customKey = '') {
     if (typeof ttl === 'string') {
       customKey = ttl;
-      ttl = 60;
+      ttl = TWENTY_MINUTES_IN_SECONDS;
     }
 
     this._ttl = ttl;
