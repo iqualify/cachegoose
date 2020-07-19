@@ -140,6 +140,24 @@ module.exports = function(mongoose, cache) {
 
     return generateKey(key);
   };
+
+  /**
+   * @param {string} key the key to check for.
+   * @return whether there is an entry for the key
+   */
+  mongoose.Query.prototype.isCached = async function(key) {
+    if (!key) {
+      throw new Error('Must provide a key');
+    }
+
+    cache.get(key, (err, cachedResults) => {
+      if (err) {
+        throw err;
+      }
+
+      return Boolean(cachedResults);
+    });
+  };
 };
 
 function hydrateModel(constructor) {
