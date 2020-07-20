@@ -143,7 +143,7 @@ module.exports = function(mongoose, cache) {
 
   /**
    * @param {string} key the key to check for.
-   * @return whether there is an entry for the key
+   * @return {Promise<Boolean>} whether there is an entry for the key
    */
   mongoose.Query.prototype.isCached = async function(key) {
     if (!key) {
@@ -156,6 +156,21 @@ module.exports = function(mongoose, cache) {
       }
 
       return Boolean(cachedResults);
+    });
+  };
+
+  /**
+   * @param {string} key the key to set.
+   * @param {string} value the value to set.
+   * @return {Promise}
+   */
+  mongoose.Query.prototype.setCache = async function(key, value, ttl = TWENTY_MINUTES_IN_SECONDS) {
+    if (!key || !value) {
+      throw new Error('Must provide a key and value');
+    }
+
+    cache.set(key, value, ttl, () => {
+      return;
     });
   };
 };
