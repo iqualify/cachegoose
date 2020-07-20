@@ -150,12 +150,14 @@ module.exports = function(mongoose, cache) {
       throw new Error('Must provide a key');
     }
 
-    cache.get(key, (err, cachedResults) => {
-      if (err) {
-        throw err;
-      }
+    return new Promise((resolve, reject) => {
+      cache.get(key, (err, cachedResults) => {
+        if (err) {
+          return reject(err);
+        }
 
-      return Boolean(cachedResults);
+        return resolve(Boolean(cachedResults));
+      });
     });
   };
 
@@ -169,8 +171,10 @@ module.exports = function(mongoose, cache) {
       throw new Error('Must provide a key and value');
     }
 
-    cache.set(key, value, ttl, () => {
-      return;
+    return new Promise((resolve, reject) => {
+      cache.set(key, value, ttl, () => {
+        return resolve();
+      });
     });
   };
 };
