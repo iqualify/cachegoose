@@ -172,9 +172,13 @@ module.exports = function(mongoose, cache) {
     }
 
     return new Promise((resolve, reject) => {
-      cache.set(key, value, ttl, () => {
+      if (process.env.DISABLE_DB_MEMCACHE === 'true') {
         return resolve();
-      });
+      } else {
+        cache.set(key, value, ttl, () => {
+          return resolve();
+        });
+      }
     });
   };
 };
