@@ -25,7 +25,7 @@ function applyProjections(results, projections) {
 
 module.exports = function(mongoose, cache) {
   const exec = mongoose.Query.prototype.exec;
-  const TWENTY_MINUTES_IN_SECONDS = 60 * 20;
+  const TWENTY_MINUTES_IN_MILLISECONDS = 1000 * 60 * 20;
 
   mongoose.Query.prototype.exec = function(op, callback = function() { }) {
     if (!this.hasOwnProperty('_ttl')) return exec.apply(this, arguments);
@@ -98,21 +98,21 @@ module.exports = function(mongoose, cache) {
   /**
    * Sets instance variables that control caching behavior.
    *
-   * @param {number|string|boolean} ttl how long to keep this entry in memory in seconds
+   * @param {number|string|boolean} ttl how long to keep this entry in memory in milliseconds
    *                                    if it's a string, it is the customKey
    *                                    if it's a boolean, it is doProjectionsOnServer
    * @param {string} customKey the key to associate this cache entry with
    * @param {boolean} doProjectionsOnServer whether to filter projections after the
    *                                        complete record is returned from the db or cache
    */
-  mongoose.Query.prototype.cache = function(ttl = TWENTY_MINUTES_IN_SECONDS, customKey = '', doProjectionsOnServer = false) {
+  mongoose.Query.prototype.cache = function(ttl = TWENTY_MINUTES_IN_MILLISECONDS, customKey = '', doProjectionsOnServer = false) {
     if (typeof ttl === 'string') {
       customKey = ttl;
-      ttl = TWENTY_MINUTES_IN_SECONDS;
+      ttl = TWENTY_MINUTES_IN_MILLISECONDS;
     }
     if (typeof ttl === 'boolean') {
       doProjectionsOnServer = ttl;
-      ttl = TWENTY_MINUTES_IN_SECONDS;
+      ttl = TWENTY_MINUTES_IN_MILLISECONDS;
     }
 
     this._ttl = ttl;
@@ -166,7 +166,7 @@ module.exports = function(mongoose, cache) {
    * @param {string} value the value to set.
    * @return {Promise}
    */
-  mongoose.Query.prototype.setCache = async function(key, value, ttl = TWENTY_MINUTES_IN_SECONDS) {
+  mongoose.Query.prototype.setCache = async function(key, value, ttl = TWENTY_MINUTES_IN_MILLISECONDS) {
     if (!key || !value) {
       throw new Error('Must provide a key and value');
     }
