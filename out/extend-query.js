@@ -140,47 +140,6 @@ module.exports = function(mongoose, cache) {
 
     return generateKey(key);
   };
-
-  /**
-   * @param {string} key the key to check for.
-   * @return {Promise<Boolean>} whether there is an entry for the key
-   */
-  mongoose.Query.prototype.isCached = async function(key) {
-    if (!key) {
-      throw new Error('Must provide a key');
-    }
-
-    return new Promise((resolve, reject) => {
-      cache.get(key, (err, cachedResults) => {
-        if (err) {
-          return reject(err);
-        }
-
-        return resolve(Boolean(cachedResults));
-      });
-    });
-  };
-
-  /**
-   * @param {string} key the key to set.
-   * @param {string} value the value to set.
-   * @return {Promise}
-   */
-  mongoose.Query.prototype.setCache = async function(key, value, ttl = TWENTY_MINUTES_IN_MILLISECONDS) {
-    if (!key || !value) {
-      throw new Error('Must provide a key and value');
-    }
-
-    return new Promise((resolve, reject) => {
-      if (process.env.DISABLE_DB_MEMCACHE === 'true') {
-        return resolve();
-      } else {
-        cache.set(key, value, ttl, () => {
-          return resolve();
-        });
-      }
-    });
-  };
 };
 
 function hydrateModel(constructor) {

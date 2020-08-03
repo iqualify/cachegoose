@@ -18,11 +18,13 @@ Cache.prototype.set = function (key, value, ttl, cb = noop) {
 };
 
 Cache.prototype.del = function (key, cb = noop) {
-  return this._cache.del(key, cb);
+  this._cache.del(key);
+  return cb();
 };
 
 Cache.prototype.clear = function (cb = noop) {
-  return this._cache.clear(cb);
+  this._cache.clear();
+  return cb();
 };
 
 module.exports = function (options) {
