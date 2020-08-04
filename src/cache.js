@@ -1,29 +1,33 @@
 'use strict';
 
-const Cacheman = require('cacheman');
+const cache = require('memory-cache');
 const noop = () => {};
 
 function Cache(options) {
-  this._cache = new Cacheman('cachegoose-cache', options);
+  this._cache = cache;
 }
 
-Cache.prototype.get = function(key, cb = noop) {
-  return this._cache.get(key, cb);
+Cache.prototype.get = function (key, cb = noop) {
+  const cachedResults = this._cache.get(key);
+  return cb(null, cachedResults);
 };
 
-Cache.prototype.set = function(key, value, ttl, cb = noop) {
+Cache.prototype.set = function (key, value, ttl, cb = noop) {
   if (ttl === 0) ttl = -1;
-  return this._cache.set(key, value, ttl, cb);
+  this._cache.put(key, value, ttl);
+  return cb();
 };
 
-Cache.prototype.del = function(key, cb = noop) {
-  return this._cache.del(key, cb);
+Cache.prototype.del = function (key, cb = noop) {
+  this._cache.del(key);
+  return cb();
 };
 
-Cache.prototype.clear = function(cb = noop) {
-  return this._cache.clear(cb);
+Cache.prototype.clear = function (cb = noop) {
+  this._cache.clear();
+  return cb();
 };
 
-module.exports = function(options) {
+module.exports = function (options) {
   return new Cache(options);
 };
