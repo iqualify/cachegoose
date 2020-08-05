@@ -14,9 +14,9 @@ function applyProjections(results, projections) {
   });
 
   if (Array.isArray(results)) {
-    results.forEach((offering) => {
-      offering = _.pick(offering, projectionsForLodash);
-    });
+    for (let i = 0; i < results.length; i++) {
+      results[i] = _.pick(results[i], projectionsForLodash);
+    }
   } else {
     results = _.pick(results, projectionsForLodash);
   }
