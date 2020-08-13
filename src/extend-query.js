@@ -105,7 +105,7 @@ module.exports = function(mongoose, cache) {
    * @param {boolean} doProjectionsOnServer whether to filter projections after the
    *                                        complete record is returned from the db or cache
    */
-  mongoose.Query.prototype.cache = function(ttl = TWENTY_MINUTES_IN_MILLISECONDS, customKey = '', doProjectionsOnServer = false) {
+  mongoose.Query.prototype.cache = function(ttl = TWENTY_MINUTES_IN_MILLISECONDS, customKey = '', doProjectionsOnServer = true) {
     if (typeof ttl === 'string') {
       customKey = ttl;
       ttl = TWENTY_MINUTES_IN_MILLISECONDS;
