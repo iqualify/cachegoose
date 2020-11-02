@@ -28,6 +28,10 @@ Cache.prototype.clear = function (cb = noop) {
   return cb();
 };
 
+Cache.prototype.keys = function (cb = noop) {
+  return cb(this._cache.keys());
+};
+
 module.exports = function (options) {
   return new Cache(options);
 };
