@@ -64,3 +64,34 @@ module.exports.setCache = async function(key, value, ttl = TWENTY_MINUTES_IN_MIL
     }
   });
 };
+
+/**
+ * @return {Promise<array>} all current cache keys
+ */
+module.exports.getKeys = async function() {
+  if (process.env.DISABLE_DB_MEMCACHE === 'true') {
+    return;
+  }
+
+  return cache.keys();
+};
+
+/**
+ * @param {string} key the key to check for.
+ * @return {Promise<Boolean>} whether there is an entry for the key
+ */
+module.exports.get = async function(key) {
+  if (!key) {
+    throw new Error('Must provide a key');
+  }
+
+  return new Promise((resolve, reject) => {
+    cache.get(key, (err, cachedResult) => {
+      if (err) {
+        return reject(err);
+      }
+
+      return resolve(cachedResult);
+    });
+  });
+};
