@@ -73,7 +73,11 @@ module.exports.getKeys = async function() {
     return;
   }
 
-  return cache.keys();
+  return new Promise((resolve) => {
+    cache.keys((cachedKeys) => {
+      return resolve(cachedKeys);
+    });
+  });
 };
 
 /**
