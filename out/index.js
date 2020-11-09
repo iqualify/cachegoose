@@ -95,7 +95,7 @@ module.exports.get = async function(key) {
         return reject(err);
       }
 
-      if (cachedResult[0]) {
+      if (cachedResult && cachedResult[0]) {
         return resolve(cachedResult[0]);
       }
 
