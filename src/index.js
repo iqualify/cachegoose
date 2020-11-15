@@ -82,7 +82,7 @@ module.exports.getKeys = async function() {
 
 /**
  * @param {string} key the key to check for.
- * @return {Promise<Boolean>} whether there is an entry for the key
+ * @return {Promise<object>} the value associated with the key
  */
 module.exports.get = async function(key) {
   if (!key) {
