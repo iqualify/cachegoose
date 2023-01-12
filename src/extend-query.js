@@ -1,6 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
+const { Schema } = require('mongoose');
 
 const generateKey = require('./generate-key');
 
@@ -61,7 +62,13 @@ module.exports = function(mongoose, cache) {
           }
 
           if (!isLean) {
-            const constructor = mongoose.model(model);
+            let schema;
+            _.each(this.model, (value) => {
+              if (value instanceof Schema) {
+                schema = value;
+              }
+            });
+            const constructor = mongoose.model(model, schema);
             cachedResults = Array.isArray(cachedResults) ?
               cachedResults.map(hydrateModel(constructor)) :
               hydrateModel(constructor)(cachedResults);
